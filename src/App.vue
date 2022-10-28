@@ -1,10 +1,18 @@
 <template>
-  <div>
-    <a href="http://www.naver.com" @click="clickCount(1)">naver.com</a>
+  <div style="width: 100px; margin:auto">
+    <ul>
+      <li>
+        <a href="#" @click="clickCount(1)">linkpage1</a>
+      </li>
+      <li>
+        <a href="#" @click="clickCount(2)">linkpage2</a>
+      </li>
+    </ul>
   </div>  
 </template>
 
 <script>
+import firebase from '@/firebase/init'
 
 export default {
   name: 'App',
@@ -16,14 +24,17 @@ export default {
     clickCount(listNumber) {
       firebase.firestore().collection('url_list').where('listNumber', '==', listNumber).get()
           .then(snapshot => {
+            console.log("snapshot");
+            console.log(snapshot);
             if(!snapshot.empty){
-              firebase.firestore().collection('url_list').doc(snapshot.id)
+              firebase.firestore().collection('url_list').doc(snapshot.docs[0].id)
               .update({
-                count: snapshot.data().count + 1
+                count: snapshot.docs[0].data().count + 1
               })
             } else {
-              firebase.firestore().collection('url_list').doc(snapshot.id)
+              firebase.firestore().collection('url_list')
               .add({
+                listNumber,
                 count: 1,
               })
             }
