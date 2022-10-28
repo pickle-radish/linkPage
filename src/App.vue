@@ -51,14 +51,12 @@ export default {
           .update({
             count: snapshot.docs[0].data().count + 1
           })
-        } else {
-          await firebase.firestore().collection('url_list')
-          .add({
-            listNumber,
-            count: 1,
-          })
         }
-        this.loadCount();
+
+        let url = await snapshot.docs[0].data().url;
+
+        location.href=url;
+
       } catch(err) {
         console.log("firebase err");
       }
